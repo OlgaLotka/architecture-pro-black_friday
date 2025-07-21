@@ -58,7 +58,7 @@ services:
       app-network:
         ipv4_address: 173.17.0.9
     volumes:
-      - shard1-data:/data/db
+      - shard1-mongodb1-data:/data/db
     command:
       [
         "--shardsvr", #запуск в режиме шардинга
@@ -78,12 +78,12 @@ services:
     container_name: shard1-rs2
     restart: always
     ports:
-      - "27018:27018"
+      - "27019:27019"
     networks:
       app-network:
         ipv4_address: 173.17.0.8
     volumes:
-      - shard1-data:/data/db
+      - shard1-mongodb2-data:/data/db
     command:
       [
         "--shardsvr", #запуск в режиме шардинга
@@ -91,7 +91,7 @@ services:
         "shard1", #название реплики
         "--bind_ip_all",
         "--port",
-        "27018"
+        "27019"
       ]
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
@@ -103,12 +103,12 @@ services:
     container_name: shard2-rs1
     restart: always
     ports:
-      - "27019:27019"
+      - "27021:27021"
     networks:
       app-network:
         ipv4_address: 173.17.0.11
     volumes:
-      - shard2-data:/data/db
+      - shard2-mongodb1-data:/data/db
     command:
       [
         "--shardsvr", #запуск в режиме шардинга
@@ -116,7 +116,7 @@ services:
         "shard2", #название реплик
         "--bind_ip_all", # обратите внимание - она отличается от реплики 1-го шарда
         "--port",
-        "27019"
+        "27021"
       ]
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
@@ -128,12 +128,12 @@ services:
     container_name: shard2-rs2
     restart: always
     ports:
-      - "27019:27019"
+      - "27022:27022"
     networks:
       app-network:
         ipv4_address: 173.17.0.12
     volumes:
-      - shard2-data:/data/db
+      - shard2-mongodb2-data:/data/db
     command:
       [
         "--shardsvr", #запуск в режиме шардинга
@@ -141,7 +141,7 @@ services:
         "shard2", #название реплик
         "--bind_ip_all", # обратите внимание - она отличается от реплики 1-го шарда
         "--port",
-        "27019"
+        "27022"
       ]
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
@@ -181,7 +181,8 @@ networks:
 
 volumes:
   config-data:
-  mongodb1-data:
-  mongodb2-data:
-  shard2-data:
+  shard1-mongodb1-data:
+  shard1-mongodb2-data:
+  shard2-mongodb1-data:
+  shard2-mongodb2-data:
   mongodb1_data_container:
