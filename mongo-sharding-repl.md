@@ -1,12 +1,12 @@
 Инициализация шагов шардирования в MongoDB
 
 1. Подключаемся к конфиг серверу
-```shell
+```bash
 docker exec -it configSrv mongosh --port 27017
 ```
 
 2. Выполните для инциализации конфигурации
-```shell
+```bash
 rs.initiate(
 {
     _id : "config_server",
@@ -18,17 +18,17 @@ rs.initiate(
 );
 ```
 3. Отключится от сервера конфигурации
-```shell
+```bash
 exit(); 
 ```
 
 4. Подключаемся к шарду 1 серверу
 
-```shell
+```bash
 docker exec -it shard1-rs1 mongosh --port 27018
 ```
 5. Выполните для инциализации шарда 1
-```shell
+```bash
  rs.initiate(
     {
       _id : "shard1",
@@ -40,15 +40,15 @@ docker exec -it shard1-rs1 mongosh --port 27018
 );
 ```  
 6. Отключится от шарда 1
-```shell
+```bash
 exit();
 ```
 7. Подключаемся к шарду 2 серверу
-```shell
+```bash
 docker exec -it shard2-rs1 mongosh --port 27021
 ```
 8. Выполните для инциализации шарда 2
-```shell
+```bash
 rs.initiate(
     {
       _id : "shard2",
@@ -60,39 +60,39 @@ rs.initiate(
   );
 ```
 9. Отключится от шарда 2
-```shell
+```bash
  exit();
 ```
 
 10. Подключаемся роутеру
-```shell
+```bash
 docker exec -it mongos_router mongosh --port 27020
 ```
 11. Добавляем реплику 1 для шарда1
-```shell
-sh.addShard( "shard1/shard1-rs1:27018");
+```bash
+sh.addShard("shard1/shard1-rs1:27018");
 ```
 12. Добавляем реплику 2 для шарда1
-```shell
-sh.addShard( "shard1/shard1-rs2:27019");
+```bash
+sh.addShard("shard1/shard1-rs2:27019");
 ```
 13. Добавляем реплику 1 для шарда2
-```shell
-sh.addShard( "shard1/shard2-rs1:27018");
+```bash
+sh.addShard("shard2/shard2-rs1:27021");
 ```
 14. Добавляем реплику 2 для шарда2
-```shell
-sh.addShard( "shard1/shard2-rs2:27019");
+```bash
+sh.addShard("shard2/shard2-rs2:27022");
 ```
 15. Инициализируем шардинг для бд
-```shell
+```bash
 sh.enableSharding("somedb");
 ```
 16. Инициализируем коллекцию
-```shell
+```bash
 sh.shardCollection("somedb.helloDoc", { "name" : "hashed" } )
 ```
 17. Отключится от роута
-```shell
+```bash
  exit();
 ```
