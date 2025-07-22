@@ -66,7 +66,7 @@ rs.initiate(
 
 10. Подключаемся роутеру
 ```bash
-docker exec -it mongos_router mongosh --port 27020
+docker exec -it mongos_router mongosh --port 27025
 ```
 11. Добавляем реплику 1 для шарда1
 ```bash
@@ -96,8 +96,12 @@ sh.shardCollection("somedb.helloDoc", { "name" : "hashed" } )
 ```bash
  exit();
 ```
-
+18. Инициализируем кластер из нод редиса
 ```bash
-docker exec -it redis_1
+docker exec -it redis_1 /bin/bash
 echo "yes" | redis-cli --cluster create   173.17.0.13:6379   173.17.0.14:6379   173.17.0.15:6379   173.17.0.16:6379   173.17.0.17:6379   173.17.0.18:6379   --cluster-replicas 1
+```
+19. Отключится от редиса
+```bash
+ exit();
 ```

@@ -66,7 +66,7 @@ rs.initiate(
 
 10. Подключаемся роутеру
 ```bash
-docker exec -it mongos_router mongosh --port 27020
+docker exec -it mongos_router mongosh --port 27025
 ```
 11. Добавляем реплику 1 для шарда1
 ```bash
