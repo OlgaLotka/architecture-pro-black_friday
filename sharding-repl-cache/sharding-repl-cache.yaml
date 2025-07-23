@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.8'
 
 services:
   #mongodb1:
@@ -7,31 +7,15 @@ services:
     #volumes:
       #- mongodb1_data_container:/data/db
 
-  pymongo_api_0:
-    container_name: pymongo_api_0
+  pymongo_api:
+    container_name: pymongo_api
     build: 
-      context: api_app
-      dockerfile: Dockerfile
+      context: ../api_app
+      dockerfile: ../api_app/Dockerfile
     depends_on:
       - mongos_router
     ports:
       - 8080:8080
-    environment:
-      MONGODB_URL: "mongodb://mongos_router:27025"
-      MONGODB_DATABASE_NAME: "somedb"
-      REDIS_URL: "redis://redis_1:6379"
-    networks:
-      - app-network
-
-  pymongo_api_1:
-    container_name: pymongo_api_1
-    build:
-      context: api_app
-      dockerfile: Dockerfile
-    depends_on:
-      - mongos_router
-    ports:
-      - 8081:8080
     environment:
       MONGODB_URL: "mongodb://mongos_router:27025"
       MONGODB_DATABASE_NAME: "somedb"
@@ -266,58 +250,13 @@ services:
       app-network:
         ipv4_address: 173.17.0.18
 
-  #api gateway
-  apisix:
-    image: apache/apisix:3.9.0-debian
-    restart: always
-    volumes:
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
-    depends_on:
-      - etcd
-    ##network_mode: host
-    ports:
-      - "9180:9180/tcp"
-      - "9080:9080/tcp"
-      - "9091:9091/tcp"
-      - "9443:9443/tcp"
-      - "9092:9092/tcp"
-    networks:
-      - app-network
-
-  #база данных типа Key-value для APISIX
-  etcd:
-    image: bitnami/etcd:3.5.11
-    restart: always
-    volumes:
-      - etcd_data:/bitnami/etcd
-    environment:
-      ETCD_ENABLE_V2: "true"
-      ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
-    ports:
-      - "2379:2379/tcp"
-    networks:
-      - app-network
-
-  consul:
-    image: consul:1.15.1
-    container_name: consul
-    restart: always
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.20
-    ports:
-      - '8500:8500'
-    command: 'agent -server -bootstrap-expect=1 -node=agent-one -client 0.0.0.0 -advertise=192.168.1.100 -log-level info -data-dir=/consul/data -enable-script-checks'
-
 networks:
   app-network:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 173.17.0.0/20
+        - subnet: 173.17.0.0/19
 
 volumes:
   config-data:
@@ -332,5 +271,3 @@ volumes:
   redis_4_data: {}
   redis_5_data: {}
   redis_6_data: {}
-  etcd_data:
-    driver: local
