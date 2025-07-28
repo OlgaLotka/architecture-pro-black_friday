@@ -50,9 +50,16 @@ db.adminCommand({ shardCollection: "database.products", key: { "price": "price" 
 db.adminCommand({ shardCollection: "database.orders", key: { "clientId": "hashed" } })
 ```
 ### <a name="_bjrr7veeh80c"></a>**Метрики шардирования**
-CPU
-RAM
-среднее время ответа
+Метрики для отслеживания состояние шардов
+<ul><li>CPU</li></ul>
+<ul><li>RAM</li></ul>
+<ul><li>среднее время ответа</li></ul>
+
+Можно реализовать динамическое шардирования для горячих шардов по полю геозона
+```shell
+db.adminCommand({ shardCollection: "database.orders", key: { "geo_zone": "hashed",  "clientId": "hashed" }});
+db.adminCommand({ shardCollection: "database.carts", key: { "geo_zone": "hashed" }});
+```
 
 |**№** | **Операция**                                                                        |  **Реплика**   | **Допустимая задержка** | **Обоснование**                                                                                                                                          |
 |:----:|:------------------------------------------------------------------------------------|:--------------:|:-----------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -72,10 +79,46 @@ RAM
 Являются критически важными с точки зрения целостности и скорости обработки
 
 
-
 |**№**|**Операция**| **Ключ для партиций** | **Стратегия**                       | **Обоснование**                                                                                                             |
 |:---:|:------------------------------------------------------------------------------------|:---------------------:|:------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 |F4|Обновление остатков|        геозона        | Read Repair,    Anti-Entropy Repair | Здесь нужен высокий уровень согласованности, чтобы нельзя было заказать несуществующий товар                                |
 |F1|Быстрое создание заказов|        геозона        | Hinted Handoff, Read Repair              | Здесь нужен высокий уровень согласованности, но ниже чем в предыдущем пункте, нам нужна любая реплика с правильными данными |
 |F5|Поиск товаров по категориям и фильтрация по диапазону цен |         цена          | Read Repair, Anti-Enropy Repair     | Нужен средний уровень согласованности потому что мы просто смотрим товар но очень выской уровень доступности данных         |
 
+```shell
+CREATE KEYSPACE MYKEYSPACE WITH REPLICATION = {
+'class' : 'SimpleStrategy',
+'replication_factor' : 3
+};
+
+CREATE TABLE products(
+ id int,
+ name text,
+ category text,
+ price int,
+ count_id int,
+ attr text
+ PRIMARY KEY(id, (price))
+) WITH CLUSTERING ORDER BY(price  DESC);
+  
+CREATE TABLE store(
+ id int,
+ count text,
+ geo_zone text
+
+ PRIMARY KEY(id, (geo_zone))
+) WITH CLUSTERING ORDER BY(geo_zone  DESC); 
+  
+CREATE TABLE carts(
+ id int,
+ id_user,
+ id_type text,
+ id_product [],
+ status text,
+ create_date timestamp,
+ update_date timestamp,
+ delete_date timestamp,
+ geo_zone text
+ PRIMARY KEY(id, (geo_zone))
+) WITH CLUSTERING ORDER BY(geo_zone  DESC);   
+```

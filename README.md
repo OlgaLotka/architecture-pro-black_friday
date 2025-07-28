@@ -99,7 +99,7 @@ sh.enableSharding("somedb");
 ```
 16. Инициализируем коллекцию
 ```bash
-sh.shardCollection("somedb.helloDoc", { "name" : "hashed" } )
+sh.shardCollection("somedb.helloDoc", { "geo_zone" : "hashed" } )
 ```
 17. Отключится от роута
 ```bash
