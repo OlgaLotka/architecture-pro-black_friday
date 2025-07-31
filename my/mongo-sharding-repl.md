@@ -1,12 +1,3 @@
-# pymongo-api
-
-## Как запустить
-
-Запускаем mongodb и приложение
-
-```shell
-docker compose -f sharding-repl-cache/sharding-repl-cache.yaml up -d
-```
 Инициализация шагов шардирования в MongoDB
 
 1. Подключаемся к конфиг серверу
@@ -99,34 +90,9 @@ sh.enableSharding("somedb");
 ```
 16. Инициализируем коллекцию
 ```bash
-sh.shardCollection("somedb.helloDoc", { "geo_zone" : "hashed" } )
+sh.shardCollection("somedb.helloDoc", { "name" : "hashed" } )
 ```
 17. Отключится от роута
 ```bash
  exit();
 ```
-18. Заполняем mongodb данными
-
-```bash
-./scripts/mongo-init.sh
-```
-
-## Как проверить
-
-### Если вы запускаете проект на локальной машине
-
-Откройте в браузере http://localhost:8080
-
-### Если вы запускаете проект на предоставленной виртуальной машине
-
-Узнать белый ip виртуальной машины
-
-```shell
-curl --silent http://ifconfig.me
-```
-
-Откройте в браузере http://<ip виртуальной машины>:8080
-
-## Доступные эндпоинты
-
-Список доступных эндпоинтов, swagger http://<ip виртуальной машины>:8080/docs
