@@ -1,11 +1,6 @@
 version: '3.8'
 
 services:
-  #mongodb1:
-    #container_name: mongo-sharding
-    #image: dh-mirror.gitverse.ru/mongo:latest
-    #volumes:
-      #- mongodb1_data_container:/data/db
 
   pymongo_api:
     container_name: pymongo_api
@@ -185,70 +180,6 @@ services:
       app-network:
         ipv4_address: 173.17.0.13
 
-  redis_2:
-    image: "redis:latest"
-    container_name: redis_2
-    ports:
-      - "6379"
-    volumes:
-        - redis_2_data:/data
-        - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.14
-
-  redis_3:
-    image: "redis:latest"
-    container_name: redis_3
-    ports:
-      - "6379"
-    volumes:
-      - redis_3_data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.15
-
-  redis_4:
-    image: "redis:latest"
-    container_name: redis_4
-    ports:
-       - "6379"
-    volumes:
-      - redis_4_data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.16
-
-  redis_5:
-    image: "redis:latest"
-    container_name: redis_5
-    ports:
-      - "6379"
-    volumes:
-       - redis_5_data:/data
-       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.17
-
-  redis_6:
-    image: "redis:latest"
-    container_name: redis_6
-    ports:
-      - "6379"
-    volumes:
-       - redis_6_data:/data
-       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
-    networks:
-      app-network:
-        ipv4_address: 173.17.0.18
 
 networks:
   app-network:
@@ -256,7 +187,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 173.17.0.0/19
+        - subnet: 173.17.0.0/20
 
 volumes:
   config-data:

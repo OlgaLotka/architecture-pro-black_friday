@@ -107,19 +107,9 @@ sh.shardCollection("somedb.helloDoc", { "geo_zone" : "hashed" } )
 ```
 18. Заполняем mongodb данными
 
-```shell
+```bash
 ./scripts/mongo-init.sh
 ```
-19. Инициализируем кластер из нод редиса
-```bash
-docker exec -it redis_1 /bin/bash
-echo "yes" | redis-cli --cluster create   173.17.0.13:6379   173.17.0.14:6379   173.17.0.15:6379   173.17.0.16:6379   173.17.0.17:6379   173.17.0.18:6379   --cluster-replicas 1
-```
-20. Отключится от редиса
-```bash
- exit();
-```
-
 
 ## Как проверить
 
